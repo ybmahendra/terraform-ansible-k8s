@@ -1,0 +1,44 @@
+Dynamic Inventory 
+Dynamic Inventory is a script (python/shellscript/yaml Script) these machines can be used to get all the host machines ip adress/hostnames dynamically 
+
+we can get host machine ip or host names dynamically from any of the clouds and we can connect to host machines and we can excute anible playbooks and can execute ansible commands 
+
+vi dynamicInventory__aws_ec2.yml (creating below dynamic inventory)
+
+plugin: aws_ec2
+
+aws_access_key: AKIA2JKZJWRDXC2QOGVL
+aws_secret_key: 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
+
+regions: 
+  - us-east-2a
+filters: 
+  instance-state-name: running
+
+keyed_groups: 
+  - key: tags.Name
+    prefix: ""
+    seperator: ""
+
+hostnames: 
+  - private-ip-address
+
+compose: 
+  ansible_host: private_ip_address
+  
+create a iamm user and provide ec2 full access and generate below access and security keys
+
+
+AKIA2JKZJWRDXC2QOGVL
+I4afSCGZDDEwKdaMmnFQ28gdpmSwwJTlQIFAFnEA
+
+ansible-inventory --graph -i dynamicInventory_aws_ec2.yaml
+ansible-galaxy collection install amazon.aws --- installing plugin
+ansible-galaxy collection list 
+
+sudo yum install pip
+pip install boto3 --user
+
+ansibal all -i dynamicInventory_aws_ec2.yaml -m ping -u ec2-user --private-key=~/ansible.pem
+ ansible all -m ping -u ec2-user --private-key=~/ans.pem --ask-vault-password
+ansible-playbook  AnsibleplayBooks/installtomcat9.yml -i dynamicInventory_aws_ec2.yaml ec2-user --private-key=~/ansible.pem -l appserver (change is done in the server with name appserver)
